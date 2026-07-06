@@ -1,0 +1,34 @@
+{
+  "text8": {
+    "dataset_name": "text8",
+    "archive_name": "text8.zip",
+    "urls": [
+      "http://mattmahoney.net/dc/text8.zip"
+    ],
+    "archive_type": "zip",
+    "raw_member_basename": "text8",
+    "raw_output_name": "text8",
+    "expected_raw_bytes": 100000000,
+    "split_bytes": {
+      "train": 90000000,
+      "val": 5000000,
+      "test": 5000000
+    },
+    "license_note": "Matt Mahoney text8 benchmark corpus."
+  },
+  "lm1b": {
+    "dataset_name": "lm1b",
+    "hf_dataset": "jdeschena/lm1b",
+    "hf_config": "",
+    "text_field": "text",
+    "train_split": "train",
+    "test_split": "test",
+    "validation_rows": 10000,
+    "train_shard_tokens": 1000000,
+    "train_output_dir": "train",
+    "val_output_name": "val.tokens",
+    "test_output_name": "test.tokens",
+    "tokenizer": "gpt2_bpe",
+    "license_note": "One Billion Word Benchmark via a Hugging Face mirror."
+  }
+}

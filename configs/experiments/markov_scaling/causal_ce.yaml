@@ -1,0 +1,25 @@
+# @package _global_
+defaults:
+- meta@_here_
+- _self_
+model:
+  name: sedd_dsmall_exit
+  _target_: src.models.BidirectionalMaskedTokenModel
+train:
+  lr: 0.0005
+kind: causal_ce
+family: markov
+objective: causal_ce
+eval:
+  eval_batches: 8
+  seq_len: 256
+logging:
+  group: markov_scaling_causal_ce
+  tags:
+  - paper
+  - markov
+  - causal_ce
+  - scaling
+paths:
+  results_root: results/causal_ce
+name: markov_scaling_causal_ce

@@ -1,0 +1,22 @@
+# @package _global_
+defaults:
+- qsc@_here_
+- _self_
+train:
+  batch_size: 64
+  grad_accum_steps: 8
+  n_steps: 500_000
+eval:
+  max_batches: 32
+  batch_size: 8
+  n_t_points: 33
+logging:
+  group: paper_text8_qsc
+  tags:
+  - paper
+  - lm
+  - qsc
+  - text8
+paths:
+  results_root: results/lm/qsc
+name: text8_qsc_paper

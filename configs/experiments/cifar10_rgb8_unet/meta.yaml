@@ -1,0 +1,76 @@
+# @package _global_
+benchmark:
+  name: cifar10_rgb8_tokens
+  data_dir: data/img/cifar10_rgb8_tokens
+  tokenizer_path: tokenizer_metadata.json
+  context_length: 3072
+  image_size: 32
+  patch_size: 1
+  codebook_size: 256
+  val_fraction: 0.02
+  files:
+    train: train_tokens.pt
+    val: val_tokens.pt
+    test: test_tokens.pt
+  augmentation:
+    random_horizontal_flip: true
+    random_horizontal_flip_prob: 0.5
+model:
+  name: img_unet_rgb8
+  base_channels: 128
+  channel_multipliers:
+  - 1
+  - 2
+  - 2
+  - 2
+  dropout: 0.1
+  time_embed_input_dim: 128
+  time_embed_dim: 512
+  input_skip: true
+train:
+  optimizer: adamw
+  beta1: 0.9
+  beta2: 0.95
+  init_weights_path: null
+  init_weights_strict: true
+  lr_schedule:
+    enabled: true
+    warmup_steps: 1000
+    min_lr: 1.0e-05
+  max_grad_norm: 1.0
+  n_steps: 300000
+  resume_from: null
+  save_every: 5000
+  weight_decay: 0.0
+eval:
+  eval_every: 10000
+  generate_curves: true
+  log_conservation_integral: true
+  max_batches: null
+  steps_per_batch: 64
+  primary_split: val
+  report_splits:
+  - val
+  - test
+logging:
+  enabled: true
+  entity: null
+  mode: online
+  print_every: 5000
+  project: gexit-diffusion
+  resume: never
+  run_id: null
+  wandb_id: null
+paths:
+  checkpoint_dir_name: checkpoints
+  checkpoint_filename_template: model_step_{step:07d}.pt
+  config_snapshot_name: config.yaml
+  history_filename: train_history.csv
+  metrics_filename: metrics.json
+  model_filename: model.pt
+  reconstruction_plot_filename: reconstructions.png
+  wandb_dir_name: wandb
+seed: 2026
+device: auto
+deterministic: false
+verbose: false

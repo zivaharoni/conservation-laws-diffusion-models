@@ -1,0 +1,38 @@
+# @package _global_
+defaults:
+- meta@_here_
+- _self_
+train:
+  snr_min: 1.0e-06
+  snr_max: 1.0
+  batch_size: 32
+  grad_accum_steps: 16
+  lr: 0.0002
+  init_weights_path: null
+  init_weights_strict: true
+  label_smoothing: 0.0
+  weight_decay: 0.1
+eval:
+  snr_min: 1.0e-06
+  snr_max: 1.0
+  max_batches: null
+  batch_size: 4
+  n_snr_points: 100
+  dense_n_snr_points: 100
+kind: lm_immse
+objective: immse
+loss:
+  name: nll
+  weight_loss_by_snr: true
+logging:
+  tags:
+  - paper
+  - lm
+  - immse
+  - text8
+  - poc
+paths:
+  results_root: results/lm/immse
+  curve_filename: immse_curve.csv
+  curve_plot_filename: mmse_curve.png
+name: text8_immse

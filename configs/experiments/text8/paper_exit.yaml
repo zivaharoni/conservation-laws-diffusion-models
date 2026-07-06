@@ -1,0 +1,22 @@
+# @package _global_
+defaults:
+- exit@_here_
+- _self_
+train:
+  batch_size: 64
+  grad_accum_steps: 8
+  n_steps: 500_000
+eval:
+  max_batches: 32
+  batch_size: 8
+  n_s_points: 33
+logging:
+  group: paper_text8_exit
+  tags:
+  - paper
+  - lm
+  - exit
+  - text8
+paths:
+  results_root: results/lm/exit
+name: text8_exit_paper

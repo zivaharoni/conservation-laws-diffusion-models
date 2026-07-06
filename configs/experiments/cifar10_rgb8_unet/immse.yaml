@@ -1,0 +1,38 @@
+# @package _global_
+defaults:
+- meta@_here_
+- _self_
+model:
+  name: img_unet_rgb8_continuous
+train:
+  snr_min: 1.0e-06
+  snr_max: 10.0
+  grad_accum_steps: 1
+  lr: 0.0002
+  batch_size: 128
+  label_smoothing: 0.0
+eval:
+  snr_min: 1.0e-06
+  snr_max: 1.0
+  batch_size: 128
+  n_snr_points: 100
+  dense_n_snr_points: 100
+kind: img_immse
+objective: immse
+loss:
+  name: nll
+  weight_loss_by_snr: true
+logging:
+  group: cifar10_rgb8_unet_immse
+  log_every: 100
+  tags:
+  - image
+  - cifar10
+  - rgb8
+  - immse
+  - unet
+paths:
+  curve_filename: immse_curve.csv
+  results_root: results/img/immse
+  curve_plot_filename: mmse_curve.png
+name: cifar10_rgb8_unet_immse

@@ -1,0 +1,30 @@
+# @package _global_
+defaults:
+- meta@_here_
+- _self_
+train:
+  grad_accum_steps: 1
+  lr: 0.0003
+  batch_size: 128
+eval:
+  batch_size: 128
+  n_s_points: 100
+kind: img_exit
+objective: exit
+masking:
+  train_mask_min: 0.0
+  train_mask_max: 1.0
+logging:
+  group: cifar10_rgb8_unet_exit
+  log_every: 100
+  tags:
+  - image
+  - cifar10
+  - rgb8
+  - exit
+  - unet
+paths:
+  curve_filename: exit_curve.csv
+  results_root: results/img/exit
+  curve_plot_filename: exit_curve.png
+name: cifar10_rgb8_unet_exit

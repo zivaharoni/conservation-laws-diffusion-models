@@ -1,0 +1,48 @@
+# Python/runtime caches
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+**/.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Notebook/editor/local OS state
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*~
+
+# Local environments and secrets
+.env
+.env.*
+.venv/
+venv/
+env/
+wandb/
+**/wandb/
+
+# One-off local/DCC scratch scripts
+tmp/
+tmp/**
+
+# Generated data, checkpoints, and experiment outputs
+data/
+results/**
+tmp*/
+outputs/
+multirun/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.npz
+*.npy
+
+# Build and publication artifacts generated outside the supported source path
+build/
+dist/
+site/

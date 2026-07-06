@@ -1,0 +1,23 @@
+# @package _global_
+defaults:
+- meta@_here_
+- _self_
+train:
+  batch_size: 32
+  label_smoothing: 0.0
+eval:
+  max_batches: null
+model:
+  use_timestep_conditioning: false
+kind: lm_causal_ce
+objective: causal_ce
+logging:
+  tags:
+  - paper
+  - lm
+  - causal_ce
+  - text8
+  - poc
+paths:
+  results_root: results/lm/causal_ce
+name: text8_causal_ce

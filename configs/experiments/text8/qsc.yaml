@@ -1,0 +1,32 @@
+# @package _global_
+defaults:
+- meta@_here_
+- _self_
+train:
+  batch_size: 32
+  grad_accum_steps: 16
+  init_weights_path: null
+  init_weights_strict: true
+  label_smoothing: 0.0
+eval:
+  max_batches: null
+  n_t_points: 100
+  t_min: 0.00390625
+  t_max: 0.9999
+kind: lm_qsc
+objective: qsc
+qsc:
+  train_t_min: 0.00390625
+  train_t_max: 0.9999
+logging:
+  tags:
+  - paper
+  - lm
+  - qsc
+  - text8
+  - poc
+paths:
+  results_root: results/lm/qsc
+  curve_filename: qsc_curve.csv
+  curve_plot_filename: qsc_curve.png
+name: text8_qsc

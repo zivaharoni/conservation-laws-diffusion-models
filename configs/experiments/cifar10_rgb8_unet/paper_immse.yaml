@@ -1,0 +1,34 @@
+# @package _global_
+defaults:
+- immse@_here_
+- _self_
+train:
+  optimizer: adamw
+  grad_accum_steps: 1
+  lr: 0.0002
+  batch_size: 128
+  n_steps: 300000
+  save_every: 5000
+  lr_schedule:
+    enabled: true
+    warmup_steps: 1000
+    min_lr: 1.0e-05
+eval:
+  batch_size: 128
+  max_batches: null
+  n_snr_points: 100
+  dense_n_snr_points: 100
+  eval_every: 10000
+loss:
+  name: nll
+  weight_loss_by_snr: true
+logging:
+  group: paper_cifar10_rgb8_unet_immse
+  tags:
+  - paper
+  - image
+  - cifar10
+  - rgb8
+  - immse
+  - unet
+name: cifar10_rgb8_unet_immse_paper

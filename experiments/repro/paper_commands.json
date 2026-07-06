@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "description": "Canonical NeurIPS 2026 reproduction command matrix. The paper profile uses the checked-in paper hyperparameters. The smoke profile keeps model/data hyperparameters but shortens optimization and evaluation work.",
+  "profiles": {
+    "paper": {
+      "description": "Full paper hyperparameters from configs."
+    },
+    "smoke": {
+      "description": "Same model/data hyperparameters, reduced iterations and evaluation work.",
+      "default_overrides": [
+        "logging.enabled=false",
+        "logging.mode=offline"
+      ]
+    }
+  },
+  "targets": [
+    {
+      "name": "bootstrap_text8",
+      "groups": ["data", "text8", "smoke"],
+      "inherit_profile_overrides": false,
+      "command": ["python", "scripts/download_lm_datasets.py", "--dataset", "text8"]
+    },
+    {
+      "name": "bootstrap_cifar10_rgb8",
+      "groups": ["data", "cifar10", "smoke"],
+      "inherit_profile_overrides": false,
+      "command": ["python", "scripts/prepare_cifar10_rgb8_tokens.py", "--output-dir", "data/img/cifar10_rgb8_tokens"]
+    },
+    {
+      "name": "markov_causal_ce_k{K}",
+      "groups": ["markov", "causal_ce", "smoke"],
+      "matrix": {"K": [8, 16, 32, 64, 128, 256, 512]},
+      "command": ["python", "scripts/train_causal_ce.py", "config_name=experiments/markov_scaling/causal_ce"],
+      "matrix_overrides": ["data.alphabet_size={K}"],
+      "profile_overrides": {
+        "smoke": ["train.n_steps=2", "eval.eval_batches=1"]
+      }
+    },
+    {
+      "name": "markov_exit_k{K}",
+      "groups": ["markov", "exit", "smoke"],
+      "matrix": {"K": [8, 16, 32, 64, 128, 256, 512]},
+      "command": ["python", "scripts/train_exit.py", "config_name=experiments/markov_scaling/exit"],
+      "matrix_overrides": ["data.alphabet_size={K}"],
+      "profile_overrides": {
+        "smoke": ["train.n_steps=2", "train.save_every=1000000", "eval.eval_batches=1", "eval.n_s_points=3"]
+      }
+    },
+    {
+      "name": "markov_immse_k{K}",
+      "groups": ["markov", "immse", "smoke"],
+      "matrix": {"K": [8, 16, 32, 64, 128, 256, 512]},
+      "command": ["python", "scripts/train_immse.py", "config_name=experiments/markov_scaling/immse"],
+      "matrix_overrides": ["data.alphabet_size={K}"],
+      "profile_overrides": {
+        "smoke": ["train.n_steps=2", "train.save_every=1000000", "train.microbatch_size=64", "eval.n_samples=256", "eval.batch_size=64", "eval.n_snr_points=16", "callbacks.early_stopping.enabled=false", "callbacks.plot_immse_curve.enabled=false"]
+      }
+    },
+    {
+      "name": "markov_qsc_k{K}",
+      "groups": ["markov", "qsc", "smoke"],
+      "matrix": {"K": [8, 16, 32, 64, 256, 512]},
+      "command": ["python", "scripts/train_bsc.py", "config_name=experiments/markov_channel_k128/qsc"],
+      "matrix_overrides": ["data.alphabet_size={K}"],
+      "profile_overrides": {
+        "smoke": ["train.n_steps=2", "train.save_every=1000000", "eval.eval_batches=1", "eval.n_s_points=3"]
+      }
+    },
+    {
+      "name": "markov_channel_exit_k128",
+      "groups": ["markov", "channel", "exit", "smoke"],
+      "command": ["python", "scripts/train_exit.py", "config_name=experiments/markov_channel_k128/exit"],
+      "profile_overrides": {
+        "smoke": ["train.n_steps=2", "train.save_every=1000000", "eval.eval_batches=1", "eval.n_s_points=3"]
+      }
+    },
+    {
+      "name": "markov_channel_qsc_k128",
+      "groups": ["markov", "channel", "qsc", "smoke"],
+      "command": ["python", "scripts/train_bsc.py", "config_name=experiments/markov_channel_k128/qsc"],
+      "profile_overrides": {
+        "smoke": ["train.n_steps=2", "train.save_every=1000000", "eval.eval_batches=1", "eval.n_s_points=3"]
+      }
+    },
+    {
+      "name": "markov_channel_immse_k128",
+      "groups": ["markov", "channel", "immse", "smoke"],
+      "command": ["python", "scripts/train_immse.py", "config_name=experiments/markov_channel_k128/immse"],
+      "profile_overrides": {
+        "smoke": ["train.n_steps=2", "train.save_every=1000000", "eval.n_samples=256", "eval.batch_size=64", "eval.n_snr_points=16", "callbacks.early_stopping.enabled=false", "callbacks.plot_immse_curve.enabled=false"]
+      }
+    },
+    {
+      "name": "text8_causal_ce",
+      "groups": ["text8", "causal_ce", "smoke"],
+      "command": ["python", "scripts/train_lm_causal_ce.py", "config_name=experiments/text8/paper_causal_ce"],
+      "profile_overrides": {
+        "smoke": ["train.n_steps=2", "train.save_every=1000000", "eval.eval_every=1000000", "eval.max_batches=1", "eval.batch_size=1"]
+      }
+    },
+    {
+      "name": "text8_exit",
+      "groups": ["text8", "exit", "smoke"],
+      "command": ["python", "scripts/train_lm_exit.py", "config_name=experiments/text8/paper_exit"],
+      "profile_overrides": {
+        "smoke": ["train.n_steps=2", "train.save_every=1000000", "eval.eval_every=1000000", "eval.max_batches=1", "eval.batch_size=1", "eval.n_s_points=3"]
+      }
+    },
+    {
+      "name": "text8_immse",
+      "groups": ["text8", "immse", "smoke"],
+      "command": ["python", "scripts/train_lm_immse.py", "config_name=experiments/text8/paper_immse"],
+      "profile_overrides": {
+        "smoke": ["train.n_steps=2", "train.save_every=1000000", "eval.eval_every=1000000", "eval.max_batches=1", "eval.batch_size=1", "eval.n_snr_points=3", "eval.dense_n_snr_points=5"]
+      }
+    },
+    {
+      "name": "text8_qsc",
+      "groups": ["text8", "qsc", "smoke"],
+      "command": ["python", "scripts/train_lm_qsc.py", "config_name=experiments/text8/paper_qsc"],
+      "profile_overrides": {
+        "smoke": ["train.n_steps=2", "train.save_every=1000000", "eval.eval_every=1000000", "eval.max_batches=1", "eval.batch_size=1", "eval.n_t_points=3"]
+      }
+    },
+    {
+      "name": "cifar10_exit",
+      "groups": ["cifar10", "exit", "smoke"],
+      "command": ["python", "scripts/train_img_exit.py", "config_name=experiments/cifar10_rgb8_unet/paper_exit"],
+      "profile_overrides": {
+        "smoke": ["train.n_steps=2", "train.save_every=1000000", "eval.eval_every=1000000", "eval.max_batches=1", "eval.batch_size=1", "eval.n_s_points=3", "eval.steps_per_batch=1"]
+      }
+    },
+    {
+      "name": "cifar10_immse",
+      "groups": ["cifar10", "immse", "smoke"],
+      "command": ["python", "scripts/train_img_immse.py", "config_name=experiments/cifar10_rgb8_unet/paper_immse"],
+      "profile_overrides": {
+        "smoke": ["train.n_steps=2", "train.save_every=1000000", "eval.eval_every=1000000", "eval.max_batches=1", "eval.batch_size=1", "eval.n_snr_points=3", "eval.dense_n_snr_points=5", "eval.steps_per_batch=1"]
+      }
+    },
+    {
+      "name": "cifar10_qsc",
+      "groups": ["cifar10", "qsc", "smoke"],
+      "command": ["python", "scripts/train_img_qsc.py", "config_name=experiments/cifar10_rgb8_unet/paper_qsc"],
+      "profile_overrides": {
+        "smoke": ["train.n_steps=2", "train.save_every=1000000", "eval.eval_every=1000000", "eval.max_batches=1", "eval.batch_size=1", "eval.n_t_points=3", "eval.steps_per_batch=1"]
+      }
+    }
+  ]
+}

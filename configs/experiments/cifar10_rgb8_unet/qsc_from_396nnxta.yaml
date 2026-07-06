@@ -1,0 +1,51 @@
+# @package _global_
+defaults:
+- meta@_here_
+- _self_
+
+model:
+  input_skip: true
+
+train:
+  grad_accum_steps: 1
+  lr: 0.0003
+  batch_size: 16
+  label_smoothing: 0.0
+  init_weights_path: results/img/cifar_suite/cifar10_rgb8_exit_0295000/downloads/checkpoints/model_step_0295000.pt
+  init_weights_strict: true
+  lr_schedule:
+    enabled: true
+    name: cosine
+    warmup_steps: 50000
+    min_lr: 1.0e-05
+
+eval:
+  batch_size: 16
+  n_t_points: 33
+  t_min: 0.00390625
+  t_max: 0.9999
+
+kind: img_qsc
+objective: qsc
+
+qsc:
+  train_t_min: 0.00390625
+  train_t_max: 0.9999
+
+logging:
+  group: cifar10_rgb8_unet_qsc_from_396nnxta
+  log_every: 100
+  tags:
+  - image
+  - cifar10
+  - rgb8
+  - qsc
+  - unet
+  - init-396nnxta
+
+paths:
+  curve_filename: qsc_curve.csv
+  results_root: results/img/qsc
+  curve_plot_filename: qsc_curve.png
+
+name: cifar10_rgb8_unet_qsc_from_396nnxta

@@ -1,0 +1,29 @@
+# @package _global_
+defaults:
+- meta@_here_
+- _self_
+train:
+  batch_size: 32
+  grad_accum_steps: 16
+  init_weights_path: null
+  init_weights_strict: true
+eval:
+  max_batches: null
+  n_s_points: 100
+kind: lm_exit
+objective: exit
+masking:
+  train_mask_min: 0.0
+  train_mask_max: 1.0
+logging:
+  tags:
+  - paper
+  - lm
+  - exit
+  - text8
+  - poc
+paths:
+  results_root: results/lm/exit
+  curve_filename: exit_curve.csv
+  curve_plot_filename: exit_curve.png
+name: text8_exit

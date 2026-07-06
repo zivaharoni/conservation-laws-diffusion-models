@@ -1,0 +1,21 @@
+# @package _global_
+defaults:
+- causal_ce@_here_
+- _self_
+train:
+  batch_size: 64
+  grad_accum_steps: 8
+  n_steps: 500_000
+eval:
+  max_batches: 32
+  batch_size: 8
+logging:
+  group: paper_text8_causal_ce
+  tags:
+  - paper
+  - lm
+  - causal_ce
+  - text8
+paths:
+  results_root: results/lm/causal_ce
+name: text8_causal_ce_paper

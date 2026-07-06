@@ -1,0 +1,33 @@
+# @package _global_
+defaults:
+- meta@_here_
+- _self_
+train:
+  grad_accum_steps: 1
+  lr: 0.0003
+  batch_size: 128
+  label_smoothing: 0.0
+eval:
+  batch_size: 128
+  n_t_points: 100
+  t_min: 0.00390625
+  t_max: 0.9999
+kind: img_qsc
+objective: qsc
+qsc:
+  train_t_min: 0.00390625
+  train_t_max: 0.9999
+logging:
+  group: cifar10_rgb8_unet_qsc
+  log_every: 100
+  tags:
+  - image
+  - cifar10
+  - rgb8
+  - qsc
+  - unet
+paths:
+  curve_filename: qsc_curve.csv
+  results_root: results/img/qsc
+  curve_plot_filename: qsc_curve.png
+name: cifar10_rgb8_unet_qsc

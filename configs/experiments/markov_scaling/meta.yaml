@@ -1,0 +1,48 @@
+# @package _global_
+data:
+  dirichlet_alpha: 0.05
+  alphabet_size: 128
+  init_distribution: stationary
+model:
+  alphabet_size: 128
+  attention_dropout: 0.1
+  embed_dim: 256
+  max_seq_len: null
+  n_heads: 8
+  n_transformer_layers: 8
+train:
+  batch_size: 256
+  grad_accum_steps: 1
+  grad_clip:
+    embedding: 10.0
+    attention: 10.0
+    alphabet_proj: 10.0
+    other: 10.0
+  init_weights_path: null
+  init_weights_strict: true
+  microbatch_size: null
+  n_steps: 100000
+  save_every: 20000
+  seq_len: 256
+logging:
+  enabled: true
+  entity: null
+  log_every: 100
+  mode: online
+  print_every: 5000
+  project: gexit-diffusion
+  resume: never
+  run_id: null
+  wandb_id: null
+paths:
+  checkpoint_dir_name: checkpoints
+  checkpoint_filename_template: model_step_{step:07d}.pt
+  config_snapshot_name: config.yaml
+  history_filename: train_history.csv
+  metrics_filename: metrics.json
+  model_filename: model.pt
+  wandb_dir_name: wandb
+seed: 2026
+device: auto
+deterministic: false
+verbose: false

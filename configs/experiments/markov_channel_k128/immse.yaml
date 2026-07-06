@@ -1,0 +1,58 @@
+# @package _global_
+defaults:
+- meta@_here_
+- _self_
+model:
+  name: immse_seq_model
+  _target_: src.models.DiscretePriorGaussianRegressionModelEmbeddingSequence
+train:
+  lr: 0.0005
+  batch_size: 256
+  n_steps: 100000
+callbacks:
+  lr_decay:
+    check_every: 20000
+  early_stopping:
+    check_every: 20000
+    rel_error_threshold: 0.05
+    n_snr_points: 24
+    n_samples: 2048
+    batch_size: 32
+  print_min_embed_distance:
+    check_every: 20000
+  plot_immse_curve:
+    enabled: false
+    check_every: 20000
+    dir_name: train_immse_curves
+    filename_template: mmse_curves_step_{step:07d}.png
+    batch_size: 32
+    n_snr_points: 20
+kind: immse
+objective: immse
+loss:
+  name: nll
+  label_smoothing: 0.0
+  estimator: probs
+  topk: null
+  weight_loss_by_snr: true
+eval:
+  n_snr_points: 100
+  n_samples: 4096
+  batch_size: 256
+  seq_len: 256
+logging:
+  group: markov_channel_k128_immse
+  tags:
+  - paper
+  - markov
+  - immse
+  - channel
+  - k128
+paths:
+  tikz_curve_filename: immse_curve_table.csv
+  curve_filename: immse_curve.csv
+  results_root: results
+  curve_plot_filename: mmse_curves.png
+name: markov_channel_immse_k128
+snr_min: 1.0e-07
+snr_max: 0.01

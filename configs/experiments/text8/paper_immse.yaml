@@ -1,0 +1,25 @@
+# @package _global_
+defaults:
+- immse@_here_
+- _self_
+train:
+  batch_size: 64
+  grad_accum_steps: 8
+  n_steps: 500_000
+  lr: 0.0002
+  weight_decay: 0.1
+eval:
+  max_batches: 32
+  batch_size: 4
+  n_snr_points: 33
+  dense_n_snr_points: 33
+logging:
+  group: paper_text8_immse
+  tags:
+  - paper
+  - lm
+  - immse
+  - text8
+paths:
+  results_root: results/lm/immse
+name: text8_immse_paper

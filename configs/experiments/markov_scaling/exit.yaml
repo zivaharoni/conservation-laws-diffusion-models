@@ -1,0 +1,50 @@
+# @package _global_
+defaults:
+- meta@_here_
+- _self_
+model:
+  name: sedd_dsmall_exit
+  _target_: src.models.BidirectionalMaskedTokenModel
+train:
+  lr: 0.0005
+kind: exit
+objective: exit
+callbacks:
+  early_stopping:
+    enabled: false
+    min_steps: 1000
+    check_every: 5000
+    rel_error_threshold: 0.01
+  lr_decay:
+    enabled: true
+    check_every: 5000
+    warmup_steps: 1000
+    min_lr: 1.0e-06
+  plot_exit_curve:
+    enabled: false
+    check_every: 5000
+    dir_name: train_exit_curves
+    filename_template: exit_curve_step_{step:07d}.png
+  print_min_embed_distance:
+    enabled: true
+    check_every: 5000
+    large_alphabet_threshold: 4096
+family: markov
+eval:
+  eval_batches: 8
+  eval_batch_size: 64
+  n_s_points: 33
+  eval_every: null
+logging:
+  group: markov_scaling_exit
+  tags:
+  - paper
+  - markov
+  - exit
+  - scaling
+paths:
+  results_root: results/exit
+  curve_filename: exit_curve.csv
+  tikz_curve_filename: exit_curve_table.csv
+  curve_plot_filename: exit_curve.png
+name: markov_scaling_exit
