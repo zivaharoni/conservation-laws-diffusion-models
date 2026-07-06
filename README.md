@@ -4,7 +4,7 @@ This repository contains the runnable code artifact for the paper "Conservation
 Laws for Diffusion Models". It includes the released synthetic Markov,
 byte-level `text8`, and CIFAR-10 RGB8 image-token experiment paths.
 
-Project site: <https://zivaharoni.github.io/gexit-diffusion-code/>
+Project site: <https://zivaharoni.github.io/conservation-laws-diffusion-models/>
 
 For setup, data preparation, paper experiment commands, smoke checks, Slurm
 launchers, evaluation commands, and tests, see
