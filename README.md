@@ -55,6 +55,6 @@ If you use this code, please cite:
   author = {Aharoni, Ziv and Pfister, Henry D.},
   year = {2026},
   note = {Code release},
-  url = {https://github.com/zivaharoni/gexit-diffusion-code}
+  url = {https://github.com/zivaharoni/conservation-laws-diffusion-models}
 }
 ```
