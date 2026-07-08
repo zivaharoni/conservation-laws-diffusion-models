@@ -18,7 +18,7 @@ launchers, evaluation commands, and tests, see
   and QSC.
 - CIFAR-10 RGB8 image-token experiments for EXIT, I-MMSE, and QSC with the
   repo-native UNet backbone.
-
+s
 The canonical paper commands use the explicit `paper_*` Hydra configs where
 available. Neighboring configs without the `paper_` prefix are development or
 lower-memory presets unless `REPRODUCIBILITY.md` states otherwise.
