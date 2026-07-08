@@ -34,17 +34,6 @@ lower-memory presets unless `REPRODUCIBILITY.md` states otherwise.
 - `tests/`: regression tests for the released code path.
 - `docs/`: GitHub Pages landing page and lightweight web figure assets.
 
-Generated datasets, checkpoints, W&B folders, Slurm logs, and result
-directories are intentionally ignored by git. Local runs write under `data/`
-and `results/` unless a config or command override says otherwise.
-
-## Notes
-
-All top-level paper presets use seed `2026` unless explicitly overridden. The
-`text8` `paper_*` configs use bounded periodic evaluation during training; full
-conservation-law curves for paper figures are generated afterward from saved
-checkpoints.
-
 ## Citation
 
 If you use this code, please cite:

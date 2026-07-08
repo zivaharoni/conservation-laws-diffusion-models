@@ -185,19 +185,6 @@
       line-height: 1.45;
     }
 
-    .abstract-copy {
-      max-width: 860px;
-      margin: 0 auto;
-    }
-
-    .abstract-copy p {
-      margin-bottom: 14px;
-    }
-
-    .abstract-copy p:last-child {
-      margin-bottom: 0;
-    }
-
     .formula-intro {
       max-width: 860px;
       margin: 0 auto 14px;
@@ -562,23 +549,6 @@
 
     <hr>
 
-    <section id="abstract" aria-labelledby="abstract-heading">
-      <h2 id="abstract-heading">Abstract</h2>
-      <div class="abstract-copy">
-        <p>
-          While autoregressive models optimize the exact likelihood implied by the chain rule, diffusion models are typically trained with denoising objectives. We develop conservation laws based on generalized extrinsic information transfer (GEXIT) functions for a broad class of memoryless noise processes, showing that the data-model cross-entropy can be characterized exactly as an integral of local information-theoretic derivatives along the noise path.
-        </p>
-        <p>
-          This gives a unified likelihood characterization for discrete and continuous diffusion, with the Gaussian case reducing to the mutual information-minimum mean-square error (I-MMSE) relationship. The conservation law also gives a locality property: for memoryless noise processes, the marginal posteriors along the noise path are sufficient to characterize the likelihood of the underlying distribution, so training reduces to learning those marginal posteriors by minimizing negative log-likelihood.
-        </p>
-        <p>
-          Although the conservation law implies that entropy is independent of the noise path, the channel type remains a design variable. In practice, finite-capacity denoisers approximate the posteriors with different accuracy across noise types, so the choice of channel affects performance. We validate these predictions on synthetic Markov sources and standard benchmarks, including <code>text8</code> and CIFAR-10.
-        </p>
-      </div>
-    </section>
-
-    <hr>
-
     <section id="conservation-law" aria-labelledby="conservation-law-heading">
       <h2 id="conservation-law-heading">Cross-Entropy Conservation Law</h2>
       <p class="formula-intro">
@@ -618,7 +588,7 @@
             <td>Path through noise-parameter space from clean data to pure noise.</td>
           </tr>
           <tr>
-            <td class="symbol-cell">\(\dot\gamma_i(\tau)\)</td>
+            <td class="symbol-cell">\(\gamma_i^\prime(\tau)\)</td>
             <td>Speed of the path in coordinate \(i\), weighting that coordinate's local derivative.</td>
           </tr>
           <tr>
@@ -642,7 +612,7 @@
         =
         \int_0^1
         \sum_{i=1}^n
-        \dot{\gamma}_i(\tau)
+        \gamma_i^\prime(\tau)
         \frac{\partial}{\partial t_i}
         \operatorname{CE}\!\left(
         P_{X_i\mid Y(\mathbf t)},
