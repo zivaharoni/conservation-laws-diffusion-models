@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Conservation Laws for Diffusion Models · NeurIPS 2026</title><meta name="description" content="A unified information-theoretic view of local denoising and global likelihood. NeurIPS 2026 poster by Ziv Aharoni and Henry D. Pfister."><style>
+    :root {
+      color-scheme: light;
+      --ink: #111111;
+      --muted: #555555;
+      --rule: #dddddd;
+      --link: #175a9c;
+      --bg: #ffffff;
+      --soft: #f7f7f7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    main {
+      width: min(940px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 44px 0 54px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 16px;
+      font-size: clamp(34px, 5vw, 54px);
+      line-height: 1.08;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 14px;
+      font-size: 26px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    a {
+      color: var(--link);
+    }
+
+    hr {
+      height: 1px;
+      margin: 36px 0;
+      border: 0;
+      background: var(--rule);
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 22px;
+    }
+
+    li + li {
+      margin-top: 7px;
+    }
+
+    code,
+    pre {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    pre {
+      margin: 0;
+      padding: 14px 16px;
+      overflow-x: auto;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      background: var(--soft);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .authors {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      max-width: 520px;
+      margin: 0 auto 16px;
+      text-align: center;
+    }
+
+    .author-name {
+      margin: 0 0 2px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .affiliation {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px 20px;
+      margin: 22px 0 30px;
+      font-size: 18px;
+    }
+
+    .links a {
+      font-weight: 700;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    .hero {
+      margin: 0;
+      text-align: center;
+    }
+
+    figure {
+      margin: 0;
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--rule);
+      background: #ffffff;
+    }
+
+    figcaption {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .lead {
+      max-width: 790px;
+      margin: 0 auto;
+      font-size: 18px;
+    }
+
+    .tldr {
+      max-width: 860px;
+      margin: 0 auto;
+      font-size: 19px;
+      line-height: 1.45;
+    }
+
+    .abstract-copy {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .abstract-copy p {
+      margin-bottom: 14px;
+    }
+
+    .abstract-copy p:last-child {
+      margin-bottom: 0;
+    }
+
+    .wide-figure {
+      margin-top: 18px;
+    }
+
+    .compact-figure {
+      width: min(100%, 620px);
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .panorama {
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .panorama img {
+      min-width: 780px;
+    }
+
+    .figure-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+      margin-top: 18px;
+    }
+
+    .generation-stack {
+      display: grid;
+      gap: 26px;
+      margin-top: 18px;
+    }
+
+    .generation-stack figure {
+      width: min(100%, 470px);
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .results-table {
+      width: min(100%, 640px);
+      margin: 14px auto 0;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    .results-table th,
+    .results-table td {
+      padding: 5px 6px;
+      border-bottom: 1px solid var(--rule);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .results-table th {
+      background: var(--soft);
+      font-weight: 700;
+    }
+
+    .results-table .group-row td {
+      padding-top: 9px;
+      padding-bottom: 5px;
+      color: var(--muted);
+      background: #fbfbfb;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+    .results-table td.numeric,
+    .results-table th.numeric {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .compact-table {
+      width: min(100%, 430px);
+      font-size: 12px;
+    }
+
+    .compact-table th,
+    .compact-table td {
+      padding: 5px 7px;
+    }
+
+    .markov-table {
+      width: min(100%, 330px);
+      table-layout: fixed;
+    }
+
+    .markov-table .method-column {
+      width: 64px;
+    }
+
+    .text8-table {
+      width: min(100%, 470px);
+      table-layout: fixed;
+    }
+
+    .text8-table .model-column {
+      width: 230px;
+    }
+
+    .text8-table .external-column {
+      width: 94px;
+    }
+
+    .text8-table .bpc-column {
+      width: 146px;
+    }
+
+    .cifar-quality-table,
+    .cifar-likelihood-table {
+      table-layout: fixed;
+    }
+
+    .cifar-quality-table .noise-column {
+      width: 34%;
+    }
+
+    .cifar-quality-table .schedule-column {
+      width: 22%;
+    }
+
+    .cifar-quality-table .fid-column {
+      width: 20%;
+    }
+
+    .cifar-quality-table .is-column {
+      width: 24%;
+    }
+
+    .cifar-likelihood-table .model-column {
+      width: 66%;
+    }
+
+    .cifar-likelihood-table .bpd-column {
+      width: 34%;
+    }
+
+    .table-pair {
+      display: grid;
+      grid-template-columns: minmax(0, 500px) minmax(0, 250px);
+      justify-content: center;
+      gap: 16px;
+      align-items: start;
+      width: min(100%, 780px);
+      margin: 18px auto 0;
+    }
+
+    .table-pair h3 {
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+
+    .table-pair .results-table {
+      width: 100%;
+      margin-top: 0;
+    }
+
+    .generation-heading {
+      margin-top: 34px;
+    }
+
+    .note {
+      color: var(--muted);
+    }
+
+    footer {
+      width: min(940px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 0 0 36px;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      main {
+        width: min(100% - 24px, 940px);
+        padding-top: 32px;
+      }
+
+      .authors,
+      .figure-grid,
+      .table-pair {
+        grid-template-columns: 1fr;
+      }
+
+      .links {
+        font-size: 16px;
+      }
+
+      .results-table {
+        font-size: 12px;
+      }
+
+      .results-table th,
+      .results-table td {
+        padding: 5px 4px;
+      }
+
+      .results-table .group-row td {
+        font-size: 10px;
+      }
+    }
+
+    @media (min-width: 940px) {
+      .panorama img {
+        min-width: 0;
+      }
+    }
+  
+:root {--ink:#142c2c;--muted:#586967;--rule:#d9e2da;--link:#14645b;--bg:#fcfcf8;--soft:#f0f4ee}
+body{font-family:Arial,Helvetica,sans-serif;line-height:1.65}main{width:min(1080px,calc(100% - 40px));padding-top:24px}.topline{display:flex;justify-content:space-between;border-bottom:1px solid var(--rule);padding-bottom:16px;font-size:12px;letter-spacing:.12em;text-transform:uppercase}.topline a{text-decoration:none}.hero{padding:66px 0 34px}.badge{display:inline-block;background:#e7eee4;padding:6px 12px;border-radius:30px;font-size:12px;letter-spacing:.1em;font-weight:700}h1{text-align:left;font-family:Georgia,serif;font-weight:400;font-size:clamp(42px,6vw,72px);letter-spacing:-.035em;max-width:880px;margin:20px 0 24px}h2{font-family:Georgia,serif;font-size:32px;font-weight:400}.lead{font-size:21px;max-width:780px;line-height:1.55;color:var(--muted)}.byline{margin:26px 0 20px}.byline span{color:var(--muted);margin-left:12px}.actions{display:flex;gap:10px;flex-wrap:wrap}.actions a{padding:10px 18px;border:1px solid #b6c9bc;border-radius:6px;text-decoration:none;font-weight:600}.actions a:first-child{background:var(--ink);color:white;border-color:var(--ink)}.idea{background:#edf2e9;border:1px solid var(--rule);border-radius:14px;padding:30px;margin:18px 0 40px}.eyebrow{text-transform:uppercase;letter-spacing:.13em;font-size:11px;font-weight:700;color:#526859}.idea h2{margin-bottom:12px}.idea svg{width:100%;height:auto;margin:12px 0}.caption{font-size:13px;color:var(--muted);margin-bottom:0}.takeaways{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-bottom:50px}.takeaways article{border-top:2px solid #8ba88f;padding-top:18px}.takeaways .num{font-size:12px;color:#637d68}.takeaways h3{font-size:18px;margin-top:10px}.takeaways p{font-size:15px;color:var(--muted)}section{scroll-margin-top:24px;margin-bottom:40px}.context{padding:14px 18px;border-left:3px solid #89a48c;background:var(--soft);font-size:14px;color:#425951}details{border:1px solid var(--rule);border-radius:8px;padding:20px;margin:30px 0}summary{cursor:pointer;font-weight:700}details p{margin-top:16px}.formula{text-align:center;padding:24px;background:var(--soft);font-family:Georgia,serif;font-size:22px}footer{border-top:1px solid var(--rule);padding-top:20px;font-size:13px;color:var(--muted)}.wide-figure img{height:auto}a:focus-visible,summary:focus-visible{outline:3px solid #d69d42;outline-offset:4px} @media(max-width:650px){.hero{padding-top:38px}.takeaways{grid-template-columns:1fr;gap:12px}.idea{padding:18px}.byline span{display:block;margin:8px 0}.topline{font-size:10px}.lead{font-size:18px}h2{font-size:27px}.results-table{font-size:12px} .formula{font-size:17px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.hero{text-align:left}.hero .lead{margin-left:0;margin-right:0}.topline{gap:16px}.topline a{flex-shrink:0}@media(max-width:650px){.topline{flex-direction:column;gap:8px}.idea svg{min-height:115px}} 
+/* Plain research-page presentation. */
+:root{--ink:#202124;--muted:#5e6268;--rule:#ddd;--link:#285b86;--bg:#fff;--soft:#f7f7f7}
+main{width:min(960px,calc(100% - 40px));padding-top:20px}
+.hero{padding:30px 0 36px}
+.badge{background:none;padding:0;border-radius:0;font-size:15px;font-weight:400;letter-spacing:0;color:var(--muted)}
+h1{font-size:clamp(36px,5vw,56px);letter-spacing:-.02em;margin-top:16px}
+h2{font-family:Arial,Helvetica,sans-serif;font-size:25px;font-weight:600}
+.lead{font-size:19px;max-width:740px}
+.actions{gap:24px}.actions a,.actions a:first-child{background:none;border:0;border-radius:0;padding:0;color:var(--link);font-weight:400;text-decoration:underline;text-underline-offset:3px}
+.idea{background:none;border:0;border-top:1px solid var(--rule);border-radius:0;padding:28px 0 0;margin:0 0 36px}
+.idea svg{max-width:880px;display:block;margin:18px auto}
+details{border:0;border-left:2px solid var(--rule);border-radius:0;padding:8px 18px;margin:24px 0}
+summary{font-weight:400;color:var(--link)}
+@media(max-width:650px){.hero{padding-top:20px}.idea{padding:24px 0 0}.lead{font-size:17px}h2{font-size:23px}}
+.conservation-equation{overflow-x:auto;padding:12px 0;font-size:1rem}.conservation-equation mjx-container{min-width:max-content}
+</style><script>
+window.MathJax = {tex: {inlineMath: [['\\(', '\\)']]}, svg: {fontCache: 'local'}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head><body><main>
+
+<header class="hero"><span class="badge">NeurIPS 2026 · Poster</span><h1>Conservation Laws<br>for Diffusion Models</h1><p class="lead">An information-theoretic connection between denoising and likelihood in discrete and continuous diffusion.</p><p class="byline"><a href="https://sites.google.com/view/zivaharoni">Ziv Aharoni</a> &amp; <a href="https://pfister.ee.duke.edu/">Henry D. Pfister</a><span>Duke University</span></p><nav class="actions" aria-label="Project links"><a href="https://arxiv.org/abs/2607.10067">Paper</a><a href="https://github.com/zivaharoni/conservation-laws-diffusion-models">Code</a><a href="#markov">Experiments</a></nav></header>
+<section class="idea" aria-labelledby="idea-title"><h2 id="idea-title">Overview</h2><p>A sentence can be corrupted by masking letters, replacing them at random, or adding noise to their embeddings. These processes remove information at different rates. If each ends with no information about the original sentence, the total information lost is the same.<br><br>We extend conservation laws from coding theory to diffusion models, building on Cyril Méasson’s <a href="https://graphsearch.epfl.ch/en/publication/40dc323e-3f42-43cd-8275-223196c07758"><em>Conservation Laws for Coding</em> (2006)</a>. The paper shows how predictions about individual parts of the data, made at different noise levels, can be combined to characterize how well a model describes the full data distribution.</p>
+<svg viewBox="0 0 920 245" role="img" aria-labelledby="diagram-title diagram-desc"><title id="diagram-title">Three noise paths connect clean data to pure noise</title><desc id="diagram-desc">Masked, uniform replacement, and Gaussian noise follow different schematic routes between the same endpoints. Under the conservation law assumptions, local contributions integrate to the same cross-entropy for fixed data and model distributions.</desc><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="none" stroke="#6d8271"/></marker></defs><path d="M175 122 C320 15 580 15 735 122" fill="none" stroke="#287b71" stroke-width="3"/><path d="M175 122 L735 122" stroke="#ad7b39" stroke-width="3"/><path d="M175 122 C320 230 580 230 735 122" fill="none" stroke="#727aa9" stroke-width="3"/><circle cx="175" cy="122" r="7" fill="#142c2c"/><circle cx="735" cy="122" r="7" fill="#142c2c"/><g font-family="Arial,sans-serif" font-size="17" fill="#142c2c"><text x="28" y="128">Clean data</text><text x="765" y="128">Pure noise</text><text x="414" y="31" fill="#287b71">Masked</text><text x="385" y="108" fill="#93682c">Uniform replacement</text><text x="410" y="227" fill="#626b9b">Gaussian</text></g></svg>
+<p class="caption">An illustration of three ways to erase information: hide parts of the data, replace them at random, or add Gaussian noise.</p></section>
+
+<section id="theory"><h2>Choosing the noise process</h2><p>The conservation law gives a common description of masked, uniform replacement, and Gaussian noise. For a fixed data distribution, the exact information total is independent of this choice. A trained model, however, may find one denoising task easier than another. We examine these differences on synthetic sequences, text, and images.</p><details open><summary>Technical details</summary>
+<p>For data distribution \(P_X\) and model distribution \(Q_X\), let \(\gamma:[0,1]\to\mathcal{T}^n\) be a path through the space of coordinate-wise noise parameters, where \(\mathcal{T}\) is the parameter space for a single coordinate. At path position \(\tau\), \(\gamma(\tau)=(\gamma_1(\tau),\ldots,\gamma_n(\tau))\) specifies the noise parameter for each variable. The path runs from clean data at \(\tau=0\) to pure noise at \(\tau=1\). Define the channel score \(S_t\) and the local contribution \(g_i\) as follows:</p>
+<div class="conservation-equation">
+\[
+\begin{aligned}
+S_t(x,y)&=\frac{\partial}{\partial t}\log W_t(y\mid x),\\[0.8em]
+g_i(\mathbf t)
+&=\mathbb E_P\!\left[
+-S_{t_i}(X_i,Y_i)\log Q_{X_i\mid Y}(X_i\mid Y)
++\mathbb E_{X'\sim Q_{X_i\mid Y}(\cdot\mid Y)}
+\!\left[S_{t_i}(X',Y_i)\mid Y\right]
+\right],\\[0.8em]
+\operatorname{CE}(P_X,Q_X)
+&=\int_0^1\sum_{i=1}^n\gamma_i^{\prime}(\tau)\,
+ g_i\!\left(\gamma(\tau)\right)\,d\tau.
+\end{aligned}
+\]
+</div>
+<p>Here, \(Y=Y(\mathbf t)\) is the noisy observation, \(W_t(y\mid x)\) is the forward noise channel, and \(S_t\) is its channel score. The outer expectations are taken under the data distribution and this channel.</p>
+<p>The first term in \(g_i\) is the negative log-likelihood weighted by the channel score. The second is the posterior correction term; it averages to zero when the model matches the data distribution. The factor \(\gamma_i^{\prime}(\tau)\) accounts for how quickly the noise parameter of variable \(i\) changes along the path.</p>
+<p>The conserved quantity is data–model cross-entropy. When the model matches the data distribution, it reduces to entropy. Its local contributions can be evaluated using marginal posteriors and the known noise channel.</p><p>The exact identity assumes an admissible (smooth) memoryless channel family, posteriors factored with the true channel, and mild regularity conditions, with the clean and pure-noise endpoints specified above.</p><a href="https://arxiv.org/abs/2607.10067">Full statement and proof</a></details></section><hr>
+    <section id="markov" aria-labelledby="markov-heading">
+      <h2 id="markov-heading">Synthetic sequences</h2>
+      <p>
+        For synthetic Markov sequences, we can calculate the exact curves using the BCJR algorithm. We compare these with curves from trained models below, using an alphabet of 128 symbols.
+      </p>
+      <figure class="wide-figure panorama">
+        <img src="assets/figures/markov_conservation_ground_truth.png" alt="Markov K=128 model conservation-law curves overlaid with BCJR ground-truth curves">
+        <figcaption>Solid lines: learned models. Dashed lines: exact calculations using BCJR. Each panel uses a different kind of noise.</figcaption>
+      </figure>
+
+      <table class="results-table compact-table markov-table" aria-label="Markov K=128 area validation">
+        <colgroup>
+          <col class="method-column">
+          <col>
+          <col>
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Noise type</th>
+            <th class="numeric">Area (nats)</th>
+            <th class="numeric">Rel. error</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Masked</td>
+            <td class="numeric">2.484</td>
+            <td class="numeric">1.24%</td>
+          </tr>
+          <tr>
+            <td>Uniform</td>
+            <td class="numeric">2.520</td>
+            <td class="numeric">2.74%</td>
+          </tr>
+          <tr>
+            <td>Gaussian</td>
+            <td class="numeric">2.701</td>
+            <td class="numeric">10.09%</td>
+          </tr>
+        </tbody>
+      </table>
+    </section><hr>    <section id="text8" aria-labelledby="text8-heading">
+      <h2 id="text8-heading">Text experiments</h2>
+      <p>
+        We train models on <code>text8</code> with masked, uniform replacement, and Gaussian noise, without external data. Masked noise gives the lowest bits per character among our three settings. Lower scores indicate a better fit to the data.
+      </p>
+      <div class="figure-grid">
+        <figure>
+          <img src="assets/figures/text8_masked_conservation_curve.svg" alt="text8 masked conservation-law curve">
+          <figcaption>Masked path.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/figures/text8_uniform_conservation_curve.svg" alt="text8 uniform conservation-law curve">
+          <figcaption>Uniform replacement path.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/figures/text8_gaussian_conservation_curve.svg" alt="text8 Gaussian conservation-law curve">
+          <figcaption>Gaussian path.</figcaption>
+        </figure>
+      </div>
+
+      <table class="results-table text8-table" aria-label="text8 results">
+        <colgroup>
+          <col class="model-column">
+          <col class="external-column">
+          <col class="bpc-column">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>External data</th>
+            <th class="numeric">BPC</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="group-row">
+            <td colspan="3">Our methods</td>
+          </tr>
+          <tr>
+            <td>masked (ours)</td>
+            <td>No</td>
+            <td class="numeric">1.424</td>
+          </tr>
+          <tr>
+            <td>uniform (ours)</td>
+            <td>No</td>
+            <td class="numeric">1.513</td>
+          </tr>
+          <tr>
+            <td>Gaussian (ours)</td>
+            <td>No</td>
+            <td class="numeric">2.087</td>
+          </tr>
+          <tr class="group-row">
+            <td colspan="3">Reference methods</td>
+          </tr>
+          <tr>
+            <td>D3PM mask/absorbing</td>
+            <td>No</td>
+            <td class="numeric">&le; 1.45 &plusmn; 0.02</td>
+          </tr>
+          <tr>
+            <td>SEDD Absorb</td>
+            <td>No</td>
+            <td class="numeric">&le; 1.39</td>
+          </tr>
+          <tr>
+            <td>MDLM</td>
+            <td>Yes</td>
+            <td class="numeric">&le; 1.40</td>
+          </tr>
+          <tr>
+            <td>MD4</td>
+            <td>Yes</td>
+            <td class="numeric">&le; 1.37</td>
+          </tr>
+          <tr>
+            <td>EDLM</td>
+            <td>Yes</td>
+            <td class="numeric">&le; 1.24</td>
+          </tr>
+        </tbody>
+      </table>
+    </section><hr>    <section id="results" aria-labelledby="results-heading">
+      <h2 id="results-heading">Image experiments</h2>
+      <p>
+        On CIFAR-10, we compare the same three noise types in terms of likelihood and generated image quality.
+      </p>
+
+      <h3>Conservation Curves</h3>
+
+      <div class="figure-grid">
+        <figure>
+          <img src="assets/figures/masked_conservation_curve.png" alt="Masked conservation-law curve">
+          <figcaption>Masked path.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/figures/uniform_conservation_curve.png" alt="Uniform conservation-law curve">
+          <figcaption>Uniform path.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/figures/gaussian_conservation_curve.png" alt="Gaussian conservation-law curve">
+          <figcaption>Gaussian path.</figcaption>
+        </figure>
+      </div>
+
+      <div class="table-pair">
+        <div>
+          <h3>Sample Quality</h3>
+          <table class="results-table cifar-quality-table" aria-label="CIFAR-10 sample quality">
+            <colgroup>
+              <col class="noise-column">
+              <col class="schedule-column">
+              <col class="fid-column">
+              <col class="is-column">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Noise</th>
+                <th>Schedule</th>
+                <th class="numeric">FID</th>
+                <th class="numeric">IS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="group-row">
+                <td colspan="4">Our methods</td>
+              </tr>
+              <tr>
+                <td>uniform (ours)</td>
+                <td>cosine</td>
+                <td class="numeric">59.5084</td>
+                <td class="numeric">6.21 &plusmn; 0.06</td>
+              </tr>
+              <tr>
+                <td>masked (ours)</td>
+                <td>equal-info</td>
+                <td class="numeric">30.69</td>
+                <td class="numeric">6.87 &plusmn; 0.08</td>
+              </tr>
+              <tr>
+                <td>Gaussian (ours)</td>
+                <td>log-uniform</td>
+                <td class="numeric">26.66</td>
+                <td class="numeric">7.338 &plusmn; 0.080</td>
+              </tr>
+              <tr class="group-row">
+                <td colspan="4">Reference methods</td>
+              </tr>
+              <tr>
+                <td>D3PM uniform</td>
+                <td>cosine</td>
+                <td class="numeric">51.27 &plusmn; 2.15</td>
+                <td class="numeric">5.99 &plusmn; 0.14</td>
+              </tr>
+              <tr>
+                <td>D3PM absorbing</td>
+                <td>mutual-info</td>
+                <td class="numeric">41.28 &plusmn; 0.65</td>
+                <td class="numeric">6.26 &plusmn; 0.10</td>
+              </tr>
+              <tr>
+                <td>D3PM Gauss + logistic</td>
+                <td>linear</td>
+                <td class="numeric">7.34 &plusmn; 0.19</td>
+                <td class="numeric">8.56 &plusmn; 0.10</td>
+              </tr>
+              <tr>
+                <td>DDPM</td>
+                <td>linear-beta</td>
+                <td class="numeric">3.17</td>
+                <td class="numeric">9.46</td>
+              </tr>
+              <tr>
+                <td>Score SDE</td>
+                <td>geometric-sigma</td>
+                <td class="numeric">2.20</td>
+                <td class="numeric">9.89</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <h3>Likelihood</h3>
+          <table class="results-table cifar-likelihood-table" aria-label="CIFAR-10 likelihood">
+            <colgroup>
+              <col class="model-column">
+              <col class="bpd-column">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th class="numeric">BPD</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="group-row">
+                <td colspan="2">Reference methods</td>
+              </tr>
+              <tr>
+                <td>DDPM</td>
+                <td class="numeric">&le; 3.70</td>
+              </tr>
+              <tr>
+                <td>Improved DDPM</td>
+                <td class="numeric">&le; 3.40</td>
+              </tr>
+              <tr>
+                <td>Score SDE</td>
+                <td class="numeric">&le; 2.99</td>
+              </tr>
+              <tr>
+                <td>ML Score SDE</td>
+                <td class="numeric">&le; 2.99</td>
+              </tr>
+              <tr>
+                <td>D3PM Gauss + logistic</td>
+                <td class="numeric">&le; 3.435 &plusmn; 0.007</td>
+              </tr>
+              <tr class="group-row">
+                <td colspan="2">Our methods</td>
+              </tr>
+              <tr>
+                <td>uniform</td>
+                <td class="numeric">3.66</td>
+              </tr>
+              <tr>
+                <td>masked</td>
+                <td class="numeric">3.31</td>
+              </tr>
+              <tr>
+                <td>Gaussian</td>
+                <td class="numeric">3.24</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h3 class="generation-heading">Generated images</h3>
+      <p>
+        Samples from each model, with intermediate steps of the generation process below.
+      </p>
+
+      <div class="generation-stack">
+        <figure>
+          <img src="assets/figures/masked_generation_panel.png" alt="Masked CIFAR-10 generated samples and diffusion traces">
+          <figcaption>Masked path generations.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/figures/uniform_generation_panel.png" alt="Uniform CIFAR-10 generated samples and diffusion traces">
+          <figcaption>Uniform replacement path generations.</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/figures/gaussian_generation_panel.png" alt="Gaussian CIFAR-10 generated samples and diffusion traces">
+          <figcaption>Gaussian path generations.</figcaption>
+        </figure>
+      </div>
+    </section><hr>    <section id="citation" aria-labelledby="citation-heading">
+      <h2 id="citation-heading">Citation</h2>
+      <pre><code>@misc{aharoni2026conservation,
+  title = {Conservation Laws for Diffusion Models},
+  author = {Ziv Aharoni and Henry D. Pfister},
+  year = {2026},
+  eprint = {2607.10067},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.LG},
+  url = {https://arxiv.org/abs/2607.10067}
+}</code></pre>
+    </section><footer>Conservation Laws for Diffusion Models · Aharoni &amp; Pfister · Duke University · NeurIPS 2026</footer></main></body></html>

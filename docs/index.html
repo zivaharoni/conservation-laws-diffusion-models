@@ -527,7 +527,7 @@
 
     <div class="authors" aria-label="Authors">
       <div>
-        <p class="author-name"><a href="https://sites.google.com/view/zivaharoni">Ziv Aharoni</a></p>
+        <p class="author-name"><a href="https://zivaharoni.github.io/">Ziv Aharoni</a></p>
         <p class="affiliation">Duke University</p>
       </div>
       <div>
@@ -573,7 +573,7 @@
           </tr>
           <tr>
             <td class="symbol-cell">\(Q_X\)</td>
-            <td>Another distribution whose cross-entropy against \(P_X\) is evaluated.</td>
+            <td>A different distribution satisfying \(P_X \ll Q_X\).</td>
           </tr>
           <tr>
             <td class="symbol-cell">\(Y(\mathbf t)\)</td>
@@ -593,7 +593,7 @@
           </tr>
           <tr>
             <td class="symbol-cell">\(Q_{X_i\mid Y}\)</td>
-            <td>Model marginal posterior used to evaluate the local derivative.</td>
+            <td>Marginal posterior under \(Q_X\), used to evaluate the local derivative.</td>
           </tr>
           <tr>
             <td class="symbol-cell">\(S_t(x,y)\)</td>
@@ -666,24 +666,24 @@
         </colgroup>
         <thead>
           <tr>
-            <th>Method</th>
+            <th>Noise type</th>
             <th class="numeric">Area (nats)</th>
             <th class="numeric">Rel. error</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>EXIT</td>
+            <td>Masked</td>
             <td class="numeric">2.484</td>
             <td class="numeric">1.24%</td>
           </tr>
           <tr>
-            <td>QSC</td>
+            <td>Uniform</td>
             <td class="numeric">2.520</td>
             <td class="numeric">2.74%</td>
           </tr>
           <tr>
-            <td>I-MMSE</td>
+            <td>Gaussian</td>
             <td class="numeric">2.701</td>
             <td class="numeric">10.09%</td>
           </tr>
@@ -961,10 +961,12 @@
 
     <section id="citation" aria-labelledby="citation-heading">
       <h2 id="citation-heading">Citation</h2>
-      <pre><code>@misc{aharoni2026conservation,
+      <pre><code>@inproceedings{aharoni2026conservation,
   title = {Conservation Laws for Diffusion Models},
-  author = {Ziv Aharoni and Henry D. Pfister},
+  author = {Aharoni, Ziv and Pfister, Henry D.},
+  booktitle = {Advances in Neural Information Processing Systems},
   year = {2026},
+  note = {Accepted at NeurIPS 2026},
   eprint = {2607.10067},
   archivePrefix = {arXiv},
   primaryClass = {cs.LG},
